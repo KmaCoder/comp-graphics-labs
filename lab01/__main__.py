@@ -1,9 +1,5 @@
-import os
-
 from lab01.vectorscope import Vectorscope
+import lab01.config as cfg
 
-dirname = os.path.dirname(__file__)
-
-vectorscope = Vectorscope(os.path.join(dirname, 'IO/original.tif'))
-vectorscope.output_img(os.path.join(dirname, 'IO/output.tif'))
-# vectorscope.show_img()
+vectorscope = Vectorscope(cfg.img_path_in)
+vectorscope.output_img(cfg.img_path_out)
