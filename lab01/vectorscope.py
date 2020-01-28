@@ -6,40 +6,51 @@ import lab01.config as cfg
 
 
 class Vectorscope:
-    def __init__(self, img_path):
-        self.img = cv2.imread(img_path)
-        self.result = np.zeros((cfg.out_dimension, cfg.out_dimension, 3), np.uint8)
+    def __init__(self, img_name):
+        self.img = cv2.imread(cfg.IO_path + img_name)
+        self.ycrcb_img = self.__to_ycrcb(self.img)
+        self.vectrorscope_img = np.zeros((cfg.out_dimension, cfg.out_dimension, 3), np.uint8)
         self.__draw_vectorscope()
         self.__draw_lines()
 
+    @staticmethod
+    def __to_ycrcb(img):
+        # xform = np.array([[.299, .587, .114], [-.1687, -.3313, .5], [.5, -.4187, -.0813]])
+        # ycrcb = img.dot(xform.T)
+        # ycrcb[:, :, [1, 2]] += 128
+        # ycrcb[:, :, [0]] += 16
+        # return ycrcb
+        return cv2.cvtColor(img, cv2.COLOR_BGR2YCR_CB)
+
     def __draw_lines(self):
         size = cfg.out_dimension
-        cv2.line(self.result, (size // 2, 0), (size // 2, size), cfg.line_color, 1)
-        cv2.line(self.result, (0, size // 2), (size, size // 2), cfg.line_color, 1)
-        cv2.circle(self.result, (size // 2, size // 2), size // 2, cfg.line_color, thickness=1)
+        cv2.line(self.vectrorscope_img, (size // 2, 0), (size // 2, size), cfg.line_color, 1)
+        cv2.line(self.vectrorscope_img, (0, size // 2), (size, size // 2), cfg.line_color, 1)
+        cv2.circle(self.vectrorscope_img, (size // 2, size // 2), size // 2, cfg.line_color, thickness=1)
 
     def __draw_vectorscope(self):
         out_size = cfg.out_dimension
-        ycrcb_img = cv2.cvtColor(self.img, cv2.COLOR_BGR2YCR_CB)
-        height, width, channels = ycrcb_img.shape
+        height, width, channels = self.ycrcb_img.shape
 
         for i in range(height):
             progress_bar(i * width, height * width)
             for j in range(width):
-                y = ycrcb_img.item(i, j, 0)
-                cr = ycrcb_img.item(i, j, 1)
-                cb = ycrcb_img.item(i, j, 2)
+                y = self.ycrcb_img.item(i, j, 0)
+                cr = self.ycrcb_img.item(i, j, 1)
+                cb = self.ycrcb_img.item(i, j, 2)
                 new_i = out_size - int(cr / 255.0 * out_size)
                 new_j = int(cb / 255.0 * out_size)
-                self.result.itemset((new_i, new_j, 1), y)
+                self.vectrorscope_img.itemset((new_i, new_j, 1), y)
 
-    def show_img(self):
-        cv2.imshow('image', self.result)
+    def show_result(self):
+        cv2.imshow('ycrcb', self.ycrcb_img)
+        cv2.imshow('vectorscope', self.vectrorscope_img)
         cv2.waitKey(0)
         cv2.destroyAllWindows()
 
-    def output_img(self, path):
-        cv2.imwrite(path, self.result)
+    def output_result(self):
+        cv2.imwrite(cfg.IO_path + "out_ycrcb.jpg", self.ycrcb_img)
+        cv2.imwrite(cfg.IO_path + "out_vectorscope.jpg", self.vectrorscope_img)
 
 
 def progress_bar(value, endvalue, bar_length=20):
