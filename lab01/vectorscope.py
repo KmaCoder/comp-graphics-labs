@@ -8,27 +8,22 @@ import lab01.config as cfg
 class Vectorscope:
     def __init__(self, img_name):
         self.img = cv2.imread(cfg.IO_path + img_name)
-        self.ycrcb_img = self.__to_ycrcb(self.img)
+        self.ycrcb_img = self._to_ycrcb(self.img)
         self.vectrorscope_img = np.zeros((cfg.out_dimension, cfg.out_dimension, 3), np.uint8)
-        self.__draw_vectorscope()
-        self.__draw_lines()
+        self._draw_vectorscope()
+        self._draw_lines()
 
     @staticmethod
-    def __to_ycrcb(img):
-        # xform = np.array([[.299, .587, .114], [-.1687, -.3313, .5], [.5, -.4187, -.0813]])
-        # ycrcb = img.dot(xform.T)
-        # ycrcb[:, :, [1, 2]] += 128
-        # ycrcb[:, :, [0]] += 16
-        # return ycrcb
+    def _to_ycrcb(img):
         return cv2.cvtColor(img, cv2.COLOR_BGR2YCR_CB)
 
-    def __draw_lines(self):
+    def _draw_lines(self):
         size = cfg.out_dimension
         cv2.line(self.vectrorscope_img, (size // 2, 0), (size // 2, size), cfg.line_color, 1)
         cv2.line(self.vectrorscope_img, (0, size // 2), (size, size // 2), cfg.line_color, 1)
         cv2.circle(self.vectrorscope_img, (size // 2, size // 2), size // 2, cfg.line_color, thickness=1)
 
-    def __draw_vectorscope(self):
+    def _draw_vectorscope(self):
         out_size = cfg.out_dimension
         height, width, channels = self.ycrcb_img.shape
 
