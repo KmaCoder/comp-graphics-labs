@@ -72,8 +72,3 @@ class DrawerBresenham:
         self._canvas.itemset(p.y, p.x, 0, color[0])
         self._canvas.itemset(p.y, p.x, 1, color[1])
         self._canvas.itemset(p.y, p.x, 2, color[2])
-
-    def show_img(self):
-        cv2.imshow('image', self._canvas)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
