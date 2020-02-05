@@ -36,17 +36,17 @@ def lines_and_circles():
         Circle(Point(500, 300), 99, (100, 200, 100)),
     ]
 
-    lines_canvas = np.zeros((height, width, 3), np.uint8)
-    draw_lines_and_circles(lines_task1,
-                           circles_task1,
-                           DrawerBresenham(lines_canvas),
-                           "Lines and circles Bresenham")
-
     lines_canvas_cv2 = np.zeros((height, width, 3), np.uint8)
     draw_lines_and_circles(lines_task1,
                            circles_task1,
                            DrawerCV2(lines_canvas_cv2),
                            "Lines and circles with cv2")
+
+    lines_canvas = np.zeros((height, width, 3), np.uint8)
+    draw_lines_and_circles(lines_task1,
+                           circles_task1,
+                           DrawerBresenham(lines_canvas),
+                           "Lines and circles Bresenham")
 
 
 def head_model():

@@ -25,6 +25,7 @@ class ObjModel:
                 y1 = (y1 + 1.) * height / 2.
 
                 drawer.draw_line(Line(Point(int(x0), int(y0)), Point(int(x1), int(y1)), color))
+        drawer.flip_x()
 
     def _parse(self):
         with open(self._file_path, 'r') as input_file:

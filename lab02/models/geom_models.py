@@ -3,6 +3,9 @@ class Point:
         self.x = x
         self.y = y
 
+    def __copy__(self):
+        return Point(self.x, self.y)
+
     def swap_xy(self):
         self.x, self.y = self.y, self.x
 

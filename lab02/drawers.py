@@ -18,6 +18,9 @@ class Drawer:
         height, width, _ = self._canvas.shape
         return height, width
 
+    def flip_x(self):
+        self._canvas = np.flip(self._canvas, 0)
+
     def show_img(self, window_name: str):
         cv2.imshow(window_name, self._canvas)
 
@@ -28,8 +31,8 @@ class DrawerBresenham(Drawer):
 
     def draw_line(self, line: Line):
         steep = False
-        p1 = line.start
-        p2 = line.end
+        p1 = line.start.__copy__()
+        p2 = line.end.__copy__()
 
         if abs(p1.x - p2.x) < abs(p1.y - p2.y):
             p1.swap_xy()
