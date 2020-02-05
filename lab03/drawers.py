@@ -16,7 +16,7 @@ class Drawer:
         raise NotImplementedError
 
     def draw_filled_triangle(self, t: Triangle):
-        pass
+        raise NotImplementedError
 
     def get_dimensions(self):
         height, width, _ = self._canvas.shape
@@ -27,6 +27,14 @@ class Drawer:
 
     def show_img(self, window_name: str):
         cv2.imshow(window_name, self._canvas)
+
+    def _put_pixel(self, p: Point, color):
+        height, width = self.get_dimensions()
+        if p.x < 0 or p.x > width - 1 or p.y < 0 or p.y > height - 1:
+            return
+        self._canvas.itemset(p.y, p.x, 0, color[0])
+        self._canvas.itemset(p.y, p.x, 1, color[1])
+        self._canvas.itemset(p.y, p.x, 2, color[2])
 
 
 class DrawerBresenham(Drawer):
@@ -44,9 +52,9 @@ class DrawerBresenham(Drawer):
             steep = True
 
         if p1.x > p2.x:
-            p1.swap_with_point(p2)
+            p1, p2 = p2, p1
 
-        delta = Point(p2.x - p1.x, p2.y - p1.y)
+        delta: Point = p2 - p1
 
         derror2 = abs(delta.y) * 2
         error2 = 0
@@ -88,13 +96,26 @@ class DrawerBresenham(Drawer):
             delta += 2 * (p.x - p.y)
             p.y -= 1
 
-    def _put_pixel(self, p: Point, color):
-        height, width = self.get_dimensions()
-        if p.x < 0 or p.x > width - 1 or p.y < 0 or p.y > height - 1:
+    def draw_filled_triangle(self, t: Triangle):
+        if t.is_height_zero():
             return
-        self._canvas.itemset(p.y, p.x, 0, color[0])
-        self._canvas.itemset(p.y, p.x, 1, color[1])
-        self._canvas.itemset(p.y, p.x, 2, color[2])
+        t.sort_vertices()
+        total_height: int = t.get_height()
+        for y in range(total_height):
+            second_half: bool = y > t.p1.y - t.p0.y or t.p1.y == t.p0.y
+            segment_height: int = t.p2.y - t.p1.y if second_half else t.p1.y - t.p0.y
+            alpha: float = y / total_height
+            # be careful: with above conditions no division by zero here
+            beta: float = (y - (t.p1.y - t.p0.y if second_half else 0)) / segment_height
+
+            point1 = t.p0 + (t.p2 - t.p0) * alpha
+            point2 = t.p1 + (t.p2 - t.p1) * beta if second_half else t.p0 + (t.p1 - t.p0) * beta
+
+            if point1.x > point2.x:
+                point1, point2 = point2, point1
+
+            for x in range(point1.x, point2.x + 1):
+                self._put_pixel(Point(x, t.p0.y + y), t.color)
 
 
 class DrawerCV2(Drawer):
@@ -106,3 +127,8 @@ class DrawerCV2(Drawer):
 
     def draw_circle(self, c: Circle):
         cv2.circle(self._canvas, (c.center.x, c.center.y), c.radius, c.color)
+
+    def draw_filled_triangle(self, t: Triangle):
+        cv2.drawContours(self._canvas, [
+            np.array([(int(t.p0.x), int(t.p0.y)), (int(t.p1.x), int(t.p1.y)), (int(t.p2.x), int(t.p2.y))])], 0,
+                         t.color, -1)

@@ -1,17 +1,22 @@
 class Point:
-    def __init__(self, x: int, y: int):
-        self.x = x
-        self.y = y
+    def __init__(self, x, y):
+        self.x = int(x)
+        self.y = int(y)
 
     def __copy__(self):
         return Point(self.x, self.y)
 
+    def __add__(self, other: 'Point'):
+        return Point(self.x + other.x, self.y + other.y)
+
+    def __mul__(self, other):
+        return Point(self.x * other, self.y * other)
+
+    def __sub__(self, other: 'Point'):
+        return Point(self.x - other.x, self.y - other.y)
+
     def swap_xy(self):
         self.x, self.y = self.y, self.x
-
-    def swap_with_point(self, p: 'Point'):
-        self.x, p.x = p.x, self.x
-        self.y, p.y = p.y, self.y
 
 
 class Line:
@@ -35,10 +40,20 @@ class Triangle:
         self.p2 = p2
         self.color = color
 
-    def normalize_vertices(self):
-        if self.p1.y > self.p1.y:
-            self.p0.swap_with_point(self.p1)
+    def sort_vertices(self):
+        if self.p0.y > self.p1.y:
+            self.p0, self.p1 = self.p1, self.p0
         if self.p0.y > self.p2.y:
-            self.p0.swap_with_point(self.p2)
+            self.p0, self.p2 = self.p2, self.p0
         if self.p1.y > self.p2.y:
-            self.p1.swap_with_point(self.p2)
+            self.p1, self.p2 = self.p2, self.p1
+
+    def is_height_zero(self):
+        return self.p0.y == self.p1.y and self.p0.y == self.p2.y
+
+    def get_height(self) -> int:
+        """
+        Vertices must be sorted before calling this function
+        :return:
+        """
+        return self.p2.y - self.p0.y
