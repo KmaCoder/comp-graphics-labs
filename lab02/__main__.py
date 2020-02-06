@@ -51,7 +51,7 @@ def lines_and_circles():
 
 def head_model():
     height, width = 600, 600
-    obj_model = ObjModel("/Users/kmacoder/Mohylyanka/4-course/comp_graphics/lab02/materials/african_head.obj")
+    obj_model = ObjModel("/Users/kmacoder/Mohylyanka/4-course/comp_graphics/materials/african_head.obj")
 
     model_canvas = np.zeros((height, width, 3), np.uint8)
     model_drawer = DrawerBresenham(model_canvas)
