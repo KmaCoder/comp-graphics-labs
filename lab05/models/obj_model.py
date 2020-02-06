@@ -1,6 +1,8 @@
 import random
 from typing import List, Tuple
 
+import numpy as np
+
 from lab05.drawers import Drawer
 from lab05.models.geom_models import Line, Point, Triangle
 
@@ -30,17 +32,21 @@ class ObjModel:
         height, width = drawer.get_dimensions()
 
         for face in self._faces:
+            screen_coords: List[Point] = []
+            world_coords: List[np.array] = []
             for i in range(3):
-                x0, y0, z0 = self._vertices[face[0] - 1]
-                x1, y1, z1 = self._vertices[face[1] - 1]
-                x2, y2, z2 = self._vertices[face[2] - 1]
+                x, y, z = self._vertices[face[i] - 1]
+                screen_coords.append(Point((x + 1.) * width / 2., abs(height - (y + 1.) * height / 2.), z))
+                world_coords.append(np.array([x, y, z]))
 
-                p0 = Point((x0 + 1.) * width / 2., abs(height - (y0 + 1.) * height / 2.), z0)
-                p1 = Point((x1 + 1.) * width / 2., abs(height - (y1 + 1.) * height / 2.), z1)
-                p2 = Point((x2 + 1.) * width / 2., abs(height - (y2 + 1.) * height / 2.), z2)
+            n: np.array = np.cross(world_coords[2] - world_coords[0], world_coords[1] - world_coords[0])
+            n = n / np.linalg.norm(n)
+            intensity: float = n.dot(np.array([0, 0, -1]))
 
-                rand_color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-                drawer.draw_polygon(Triangle(p0, p1, p2, rand_color))
+            if intensity > 0:
+                max_color = int(255 * intensity)
+                rand_color = (random.randint(0, max_color), random.randint(0, max_color), random.randint(0, max_color))
+                drawer.draw_polygon(Triangle(screen_coords[0], screen_coords[1], screen_coords[2], rand_color))
 
     def _parse(self):
         with open(self._file_path, 'r') as input_file:
