@@ -10,6 +10,7 @@ class Drawer:
         height, width, _ = self._canvas.shape
         self._z_buffer = np.full((height, width), -1.)
         self._light_vector = np.array([0, 0, -1])
+        self._light_intensity = 1.2
 
     def draw_polygon(self, t: Triangle):
         raise NotImplementedError
@@ -31,11 +32,11 @@ class Drawer:
         cv2.imshow(window_name, self._canvas)
 
     def _put_pixel(self, p: Point, color):
-        # height, width = self.get_dimensions()
+        height, width = self.get_dimensions()
         x = int(p.x)
         y = int(p.y)
-        # if x < 0 or x > width - 1 or y < 0 or y > height - 1:
-        #     return
+        if x < 0 or x > width - 1 or y < 0 or y > height - 1:
+            return
         self._canvas.itemset(y, x, 0, color.b)
         self._canvas.itemset(y, x, 1, color.g)
         self._canvas.itemset(y, x, 2, color.r)
@@ -58,7 +59,7 @@ class DrawerBresenham(Drawer):
         color_intensity = self._get_polygon_color_intensity(t)
         if np.isnan(color_intensity) or color_intensity <= 0:
             return
-        t.color.set_intensity(color_intensity)
+        t.color.set_intensity(color_intensity * self._light_intensity)
 
         t.scale_to_screen(*self.get_dimensions())
         if t.is_height_zero():

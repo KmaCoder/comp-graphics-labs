@@ -22,11 +22,10 @@ def head_model_rotating():
     obj_model = ObjModel("/Users/kmacoder/Mohylyanka/4-course/comp_graphics/materials/african_head.obj")
 
     frames = []
-    theta_x = 0
-    theta_z = 0
-    for theta_y in range(36):
-        print(f'Rendering: \r{theta_y + 1}/{36}', end='')
-        obj_model.rotate(2.2, 1, 3.19)
+    frames_len = 36
+    for i in range(frames_len):
+        print(f'\rRendering frame: {i + 1}/{frames_len}', end='')
+        obj_model.rotate(10, 0, 0)
         canvas = np.zeros((height, width, 3), np.uint8)
         drawer = DrawerBresenham(canvas)
         obj_model.draw_model(drawer)
@@ -37,7 +36,7 @@ def head_model_rotating():
             start = int(time() * 1000)
             cv2.imshow('model', frame)
             end = int(time() * 1000)
-            cv2.waitKey(max(1, 16 - (start - end)))
+            cv2.waitKey(max(1, 10 - (start - end)))
 
 
 if __name__ == "__main__":

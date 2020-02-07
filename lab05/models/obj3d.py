@@ -47,6 +47,7 @@ class ObjModel:
 
     def draw_model_skeleton(self, drawer: Drawer):
         height, width = drawer.get_dimensions()
+        # color = Color.random()
         color = Color(150, 255, 100)
         for face in self._faces:
             for i in range(3):
@@ -60,7 +61,7 @@ class ObjModel:
 
     def draw_model(self, drawer: Drawer):
         for face in self._faces:
-            color = Color(150, 255, 100)
+            color = Color(255, 213, 150)
             # color = Color.random()
             coords: List[Point] = []
             for i in range(3):

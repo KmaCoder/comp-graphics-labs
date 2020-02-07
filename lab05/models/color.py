@@ -22,6 +22,6 @@ class Color:
         return self.b, self.g, self.r
 
     def set_intensity(self, intensity: float):
-        self.r = int(self.r * intensity)
-        self.g = int(self.g * intensity)
-        self.b = int(self.b * intensity)
+        self.r = min(int(self.r * intensity), 255)
+        self.g = min(int(self.g * intensity), 255)
+        self.b = min(int(self.b * intensity), 255)
