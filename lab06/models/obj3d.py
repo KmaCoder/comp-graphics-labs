@@ -9,6 +9,7 @@ from lab06.models.polygon import Polygon
 
 class ObjModel:
     def __init__(self, file_path: str = None):
+        self._position = np.array((0, 0, 0))
         self.polygons: List[Polygon] = []
         if file_path:
             self._parse(file_path)
@@ -38,7 +39,9 @@ class ObjModel:
         self.polygons = [
             Polygon.from_tuple(
                 tuple(
-                    Point(mtrx.dot(np.transpose(v.np_array)))
+                    Point(mtrx.dot(
+                        np.transpose(v.np_array - self._position)
+                    ) + self._position)
                     for v in polygon
                 ),
                 polygon.color
@@ -46,9 +49,11 @@ class ObjModel:
             for polygon in self.polygons
         ]
 
-        # for polygon in self._polygons:
-        #     for v in polygon:
-        #         v.np_array = mtrx.dot(np.transpose(v.np_array - np.array(origin))) + np.array(origin)
+    def translate(self, v: np.array):
+        self._position += v
+        for polygon in self.polygons:
+            for vertix in polygon:
+                vertix.np_array += v
 
     def _parse(self, file_path):
         vertices: List[Point] = []

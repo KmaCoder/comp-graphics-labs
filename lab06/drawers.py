@@ -13,7 +13,7 @@ class Drawer:
         self._canvas = canvas
         height, width, _ = self._canvas.shape
         self._z_buffer = np.full((height, width), -1.)
-        self._light = Light(0.05, 0.85, 25, np.array([0, 0, -1]))
+        self._light = Light(0.1, 0.8, 25, np.array([0, 0, -1]))
 
     def draw_polygon(self, t: Polygon):
         raise NotImplementedError
@@ -62,8 +62,9 @@ class DrawerBresenham(Drawer):
             return
 
         color = self._light.calc_color(polygon)
+        p = polygon
         # create copy of polygon with scaled vertices to fit screen
-        p = polygon.get_scaled_to_screen(*self.get_dimensions())
+        # p = polygon.get_scaled_to_screen(*self.get_dimensions())
 
         # sort vertices
         p.sort_vertices()
