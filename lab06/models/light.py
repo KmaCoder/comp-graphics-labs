@@ -1,4 +1,6 @@
 import numpy as np
+
+from lab06.models.color import Color
 from lab06.models.polygon import Polygon
 
 
@@ -18,3 +20,8 @@ class Light:
                 normal_vector.dot(self._light_direction) / normal_vector.dot(normal_vector)) - self._light_direction
         specular_light = pow(max(self._view_dir.dot(reflect_dir), 0.0), 32)
         return self._ambient_coef + self._diffuse_coef * diffuse_light + self._specular_coef * specular_light
+
+    def calc_color(self, p: Polygon) -> Color:
+        new_color = p.color.__copy__()
+        new_color.set_intensity(self.calc_color_intensity(p))
+        return new_color

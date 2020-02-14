@@ -13,7 +13,7 @@ class Drawer:
         self._canvas = canvas
         height, width, _ = self._canvas.shape
         self._z_buffer = np.full((height, width), -1.)
-        self._light = Light(0.05, 0.9, 25, np.array([0, 0, -1]))
+        self._light = Light(0.05, 0.85, 25, np.array([0, 0, -1]))
 
     def draw_polygon(self, t: Polygon):
         raise NotImplementedError
@@ -61,12 +61,9 @@ class DrawerBresenham(Drawer):
         if polygon.is_height_zero():
             return
 
-        intensity = self._light.calc_color_intensity(polygon)
+        color = self._light.calc_color(polygon)
         # create copy of polygon with scaled vertices to fit screen
         p = polygon.get_scaled_to_screen(*self.get_dimensions())
-
-        # set intensity of color (lightning)
-        p.color.set_intensity(intensity)
 
         # sort vertices
         p.sort_vertices()
@@ -97,7 +94,7 @@ class DrawerBresenham(Drawer):
                 pixel = Point.from_numbers(x, y_coord, point_a.z + (point_b.z - point_a.z) * phi)
                 if self._z_buffer[y_coord, x] < pixel.z:
                     self._z_buffer[y_coord, x] = pixel.z
-                    self._put_pixel(pixel, p.color)
+                    self._put_pixel(pixel, color)
 
     def draw_line(self, line: Line):
         steep = False

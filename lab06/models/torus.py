@@ -5,6 +5,7 @@ import numpy as np
 
 from lab06.models.color import Color
 from lab06.models.obj3d import ObjModel
+from lab06.models.point import Point
 from lab06.models.polygon import Polygon
 
 
@@ -35,7 +36,7 @@ def rotate(vertex, theta_x=0., theta_y=0., theta_z=0.):
 
 
 def translate(vertex, vector):
-    return (np.array(vertex) + np.array(vector)).tolist()
+    return np.array(vertex) + np.array(vector)
 
 
 def circle(r, vertices_count):
@@ -67,8 +68,8 @@ class Torus(ObjModel):
         for circle1, circle2 in zip(cut_circles, move_cycle(cut_circles)):
             for v1, v2, v3, v4 in zip(circle1, move_cycle(circle1), circle2, move_cycle(circle2)):
                 faces.extend([
-                    Polygon(v1, v2, v3, Color.random()),
-                    Polygon(v2, v3, v4, Color.random())
+                    Polygon(Point(v1), Point(v2), Point(v3), Color.random()),
+                    Polygon(Point(v2), Point(v3), Point(v4), Color.random())
                 ])
 
         self.polygons = faces

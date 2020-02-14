@@ -12,6 +12,12 @@ class Polygon:
     def __iter__(self):
         return iter(self._vertices)
 
+    # def __copy__(self):
+    #     return Polygon.from_tuple(
+    #         tuple(map(lambda x: x.__copy__(), self._vertices)),
+    #         self.color.__copy__()
+    #     )
+
     @classmethod
     def from_tuple(cls, t: Tuple, color: Color):
         return cls(t[0], t[1], t[2], color)
