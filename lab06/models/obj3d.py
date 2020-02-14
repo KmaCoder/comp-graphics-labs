@@ -8,12 +8,28 @@ from lab06.models.polygon import Polygon
 
 
 class ObjModel:
-    def __init__(self, file_path: str = None, set_scaled: bool = False):
+    def __init__(self, polygons=None):
+        self.polygons: List[Polygon] = polygons if polygons is not None else []
         self._position = np.array((0, 0, 0))
-        self.set_scaled = set_scaled
-        self.polygons: List[Polygon] = []
-        if file_path:
-            self._parse(file_path)
+        self.set_scaled = False
+
+    @classmethod
+    def from_file(cls, file_path):
+        vertices: List[Point] = []
+        faces_indexes = []
+        with open(file_path, 'r') as input_file:
+            for line in input_file:
+                line = line.strip()
+                if line.startswith("v "):
+                    vertices.append(Point(np.array(tuple(map(float, line[2:].split(" "))))))
+                elif line.startswith("f "):
+                    faces_indexes.append(tuple(map(int, map(lambda x: x.split("/", 1)[0], line[2:].split(" ")))))
+                else:
+                    continue
+        # put vertices values to corresponding faces
+        polygons = [Polygon(vertices[f0 - 1], vertices[f1 - 1], vertices[f2 - 1], Color.random())
+                    for (f0, f1, f2) in faces_indexes]
+        return cls(polygons)
 
     def rotate(self, theta_x, theta_y, theta_z):
         mtrx = np.array(
@@ -55,20 +71,3 @@ class ObjModel:
         for polygon in self.polygons:
             for vertix in polygon:
                 vertix.np_array += v
-
-    def _parse(self, file_path):
-        vertices: List[Point] = []
-        faces_indexes = []
-        with open(file_path, 'r') as input_file:
-            for line in input_file:
-                line = line.strip()
-                if line.startswith("v "):
-                    vertices.append(Point(np.array(tuple(map(float, line[2:].split(" "))))))
-                elif line.startswith("f "):
-                    faces_indexes.append(tuple(map(int, map(lambda x: x.split("/", 1)[0], line[2:].split(" ")))))
-                else:
-                    continue
-        # put vertices values to corresponding faces
-        # Color(255, 213, 150)
-        self.polygons = [Polygon(vertices[f0 - 1], vertices[f1 - 1], vertices[f2 - 1], Color.random())
-                         for (f0, f1, f2) in faces_indexes]

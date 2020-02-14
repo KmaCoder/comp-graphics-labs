@@ -26,19 +26,19 @@ def model_rotating(model: ObjModel):
 
 
 def head():
-    head_model = ObjModel("/Users/kmacoder/Mohylyanka/4-course/comp_graphics/materials/african_head.obj",
-                          set_scaled=True)
+    head_model = ObjModel.from_file("/Users/kmacoder/Mohylyanka/4-course/comp_graphics/materials/african_head.obj")
+    head_model.set_scaled = True
     head_model.rotate(20, 0, 5)
     model_rotating(head_model)
 
 
 def tor():
-    tor_model = Torus(R=200, r=100, vertices_count=40, set_scaled=False)
+    tor_model = Torus(R=200, r=100, vertices_count=40)
     tor_model.rotate(40, 0, 10)
     tor_model.translate(np.array([300, 300, 1000]))
     model_rotating(tor_model)
 
 
 if __name__ == "__main__":
-    tor() # lab06
+    tor()  # lab06
     # head()  # lab07
