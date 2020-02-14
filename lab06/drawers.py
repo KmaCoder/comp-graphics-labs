@@ -15,7 +15,7 @@ class Drawer:
         self._z_buffer = np.full((height, width), -1.)
         self._light = Light(0.1, 0.8, 25, np.array([0, 0, -1]))
 
-    def draw_polygon(self, t: Polygon):
+    def draw_polygon(self, t: Polygon, set_scaled=False):
         raise NotImplementedError
 
     def draw_line(self, line: Line):
@@ -23,7 +23,7 @@ class Drawer:
 
     def draw_model(self, model: ObjModel):
         for polygon in model.polygons:
-            self.draw_polygon(polygon)
+            self.draw_polygon(polygon, model.set_scaled)
 
     def draw_model_skeleton(self, model: ObjModel):
         for polygon in model.polygons:
@@ -57,20 +57,17 @@ class DrawerBresenham(Drawer):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-    def draw_polygon(self, polygon: Polygon):
+    def draw_polygon(self, polygon: Polygon, set_scaled=False):
         if polygon.is_height_zero():
             return
 
-        color = self._light.calc_color(polygon)
-        p = polygon
-        # create copy of polygon with scaled vertices to fit screen
-        # p = polygon.get_scaled_to_screen(*self.get_dimensions())
-
-        # sort vertices
+        p = polygon.get_scaled_to_screen(*self.get_dimensions()) if set_scaled else polygon
         p.sort_vertices()
-        total_height: int = p.get_height()
 
+        color = self._light.calc_color(polygon)
+        total_height: int = p.get_height()
         height, width = self.get_dimensions()
+
         for y in range(total_height):
             second_half: bool = y > p.v2.y - p.v1.y or p.v2.y == p.v1.y
             segment_height: int = p.v3.y - p.v2.y if second_half else p.v2.y - p.v1.y

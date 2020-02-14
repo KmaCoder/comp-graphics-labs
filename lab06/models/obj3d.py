@@ -8,8 +8,9 @@ from lab06.models.polygon import Polygon
 
 
 class ObjModel:
-    def __init__(self, file_path: str = None):
+    def __init__(self, file_path: str = None, set_scaled: bool = False):
         self._position = np.array((0, 0, 0))
+        self.set_scaled = set_scaled
         self.polygons: List[Polygon] = []
         if file_path:
             self._parse(file_path)

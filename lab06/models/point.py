@@ -63,6 +63,6 @@ class Point:
         return f"[{self.x}, {self.y}, {self.z}]"
 
     def get_scaled_to_screen(self, height, width) -> 'Point':
-        x = int((self.x + 1.) * width / 2)
+        x = int((self.x + 1.) * width / 2.0)
         y = abs(int(height - (self.y + 1.) * height / 2.))
         return self.from_numbers(x, y, self.z)

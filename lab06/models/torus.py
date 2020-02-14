@@ -51,8 +51,8 @@ def move_cycle(arr: list):
 
 
 class Torus(ObjModel):
-    def __init__(self, R: int, r: int, vertices_count: int):
-        super().__init__()
+    def __init__(self, R: int, r: int, vertices_count: int, **kwargs):
+        super().__init__(**kwargs)
         cut_circles = []
         for i in range(vertices_count):
             angle = 2 * pi * i / vertices_count
@@ -69,7 +69,7 @@ class Torus(ObjModel):
             for v1, v2, v3, v4 in zip(circle1, move_cycle(circle1), circle2, move_cycle(circle2)):
                 faces.extend([
                     Polygon(Point(v1), Point(v2), Point(v3), Color.random()),
-                    Polygon(Point(v2), Point(v3), Point(v4), Color.random())
+                    Polygon(Point(v2), Point(v4), Point(v3), Color.random())
                 ])
 
         self.polygons = faces
