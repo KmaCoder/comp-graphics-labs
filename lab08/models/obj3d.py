@@ -33,6 +33,7 @@ class ObjModel:
     def draw_opengl(self):
         glBegin(GL_TRIANGLES)
         for polygon in self.polygons:
+            glNormal3f(*polygon.normal)
             glColor3fv(polygon.color.rgb())
             glVertex3fv(polygon.get_vertex(0).tuple)
             glVertex3fv(polygon.get_vertex(1).tuple)

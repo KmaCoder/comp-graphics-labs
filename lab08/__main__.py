@@ -9,7 +9,7 @@ from lab08.models.obj3d import ObjModel
 
 def main():
     pygame.init()
-    display = (800, 600)
+    display = (600, 600)
     pygame.display.set_mode(display, DOUBLEBUF | OPENGL)
     gluPerspective(45, (display[0] / display[1]), 0.1, 50.0)
     glTranslatef(0.0, 0.0, -3)
