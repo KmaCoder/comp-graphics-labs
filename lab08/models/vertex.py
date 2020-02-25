@@ -20,3 +20,6 @@ class Vertex:
     @property
     def tuple(self) -> Tuple[float, float, float]:
         return self._tuple
+
+    def __str__(self):
+        return f"({self.x}, {self.y}, {self.z})"

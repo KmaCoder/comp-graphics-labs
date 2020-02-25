@@ -13,6 +13,12 @@ class Polygon:
         self._normal: List = []
         self._calc_normal()
 
+    def __iter__(self) -> Vertex:
+        i = 0
+        while i < len(self._vertices):
+            yield self._vertices[i]
+            i += 1
+
     def get_vertex(self, i) -> Vertex:
         return self._vertices[i]
 
