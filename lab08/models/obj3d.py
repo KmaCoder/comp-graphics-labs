@@ -49,9 +49,8 @@ class ObjModel:
         for polygon in self._polygons:
             glNormal3f(*polygon.normal)
             glColor3fv(polygon.color.rgb())
-            glVertex3fv(polygon.get_vertex(0).tuple)
-            glVertex3fv(polygon.get_vertex(1).tuple)
-            glVertex3fv(polygon.get_vertex(2).tuple)
+            for vertex in polygon:
+                glVertex3fv(vertex.tuple)
         # end drawing
         glEnd()
 
