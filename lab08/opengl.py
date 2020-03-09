@@ -25,7 +25,7 @@ class OpenGLRenderer:
         glShadeModel(GL_SMOOTH)
 
         glEnable(GL_COLOR_MATERIAL)
-        glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE)
+        glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE)
 
         glEnable(GL_LIGHT0)
         glLightfv(GL_LIGHT0, GL_POSITION, (0, 100., 0, 0.))
@@ -35,6 +35,10 @@ class OpenGLRenderer:
 
     def add_model(self, obj: ObjModel):
         self._objects.append(obj)
+
+    def add_models(self, objs: List[ObjModel]):
+        for obj in objs:
+            self.add_model(obj)
 
     def start(self):
         self._clock.tick()
@@ -49,8 +53,10 @@ class OpenGLRenderer:
 
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
 
+            # glBegin(GL_TRIANGLES)
             for obj in self._objects:
                 obj.draw_opengl()
+            # glEnd()
 
             pygame.display.flip()
             pygame.time.wait(10)
@@ -69,5 +75,5 @@ class OpenGLRenderer:
 
 class EventOnRender:
     def __init__(self, source: OpenGLRenderer, **attrs):
-        self.source = source
+        self.source: OpenGLRenderer = source
         self.attrs = attrs

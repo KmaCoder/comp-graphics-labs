@@ -8,7 +8,7 @@ from lab08.models.vertex import Vertex
 
 
 class ObjModel:
-    def __init__(self, polygons=None):
+    def __init__(self, polygons: List[Polygon] = None):
         self._polygons: List[Polygon] = polygons if polygons is not None else []
         self._rotation = (0., 0., 0.)
         self._position = (0., 0., 0.)
