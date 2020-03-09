@@ -20,24 +20,14 @@ def gen_quad(width: float, color: Color = None, position: Tuple[float, float, fl
 
 
 def main():
-    # head_path = "/Users/kmacoder/Mohylyanka/4-course/comp_graphics/materials/african_head.obj"
-    # head_model = ObjModel.from_file(head_path)
-    # head_model.translate(0, 0.5, -4)
-    #
-    # head_model_2 = ObjModel.from_file(head_path)
-    # head_model_2.translate(-2, 0, -6)
-    #
-    # head_model_3 = ObjModel.from_file(head_path)
-    # head_model_3.translate(2, 0, -6)
-
-    quad = gen_quad(4, Color(0.2, 0.8, 0.2), (0, -1.5, -4))
+    quad = gen_quad(20, Color(0.1, 0.1, 0.7), (0, -1, -10))
 
     tor_models = [Torus(R=1.0, r=0.4, vertices_count=20),
-                  Torus(R=0.3, r=0.25, vertices_count=10),
-                  Torus(R=0.6, r=0.1, vertices_count=10)]
-    tor_models[0].translate(0, 0, -4)
-    tor_models[1].translate(-2, 2, -5)
-    tor_models[2].translate(2, 2, -5)
+                  Torus(R=1.0, r=0.5, vertices_count=10),
+                  Torus(R=1.0, r=0.1, vertices_count=10)]
+    tor_models[0].translate(0, 0.5, -5)
+    tor_models[1].translate(-3.5, 4, -12)
+    tor_models[2].translate(3.5, 4, -12)
 
     renderer = OpenGLRenderer((600, 600))
     renderer.add_model(quad)
